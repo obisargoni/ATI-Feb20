@@ -57,7 +57,7 @@ class Perceptron(object):
             globalError = 0.0    #sum of iter errors over all datapoints
             for x in data:  # loop over datapoints
                 r = self.output(x)
-                if x[2] != r:  # if have a wrong response
+                if x[-1] != r:  # if have a wrong response
                     iterError = x[2] - r  # desired response - actual response
                     self.updateWeights(x, iterError) #update weights to fit datapoint x
                     globalError += abs(iterError)    #
@@ -85,7 +85,7 @@ def generateData(n):
         x = np.array([np.random.rand() * 2 - 1 for _ in range(2)])
         x = np.divide(x, np.abs(x)+1.e-17) #generates datapoint
         x += np.array([np.random.rand()/5 - 1/10 for _ in range(2)]) #adds some noise to the data
-        x = np.append(x,-np.sign(np.prod(x))) #adds label corresponding to XOR problem
+        x = np.append(x,np.greater(np.sum(x), [1.5])) #adds label corresponding to XOR problem
         data = np.vstack((data, x)) #adds datapoint to data array
     return data[1:,] #returns all datapoints except proxy datapoint
 
@@ -93,7 +93,7 @@ def generateData(n):
 def plotData(data, w, r= -1):
     plt.clf()  # clear the figure
     for x in data: #loop over datapoints
-        if x[2] > 0:
+        if x[-1] > 0:
             plt.plot(x[0],x[1], 'ob')
         else:
             plt.plot(x[0],x[1], 'or')
